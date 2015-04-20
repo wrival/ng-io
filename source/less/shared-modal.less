@@ -1,0 +1,80 @@
+shared-modal {
+	section {
+		position: fixed;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		background-color: rgba(255, 255, 255, 0.9);
+		code, div {
+			position: fixed;
+		}
+		div {
+			top: 15px;
+			right: 23px;
+			width: 30px;
+			height: 30px;
+			text-align: center;
+			color: dimgray;
+			border: 1px solid dimgray;
+			border-weight: bold;
+			line-height: 30px;
+			background-color: white;
+			cursor: pointer;
+		}
+		div:hover {
+			background-color: yellow;
+			color: black;
+		}
+		h1 {
+			font-size: 22px;
+			font-family: sans-serif;
+			color: black;
+			margin-top: 0;
+			margin: 0;
+			padding: 0;
+			border-bottom: 1px solid dimgray;
+		}
+		code {
+			top: 30px;
+			right: 30px;
+			bottom: 30px;
+			left: 30px;
+			padding: 5px;
+			padding-left: 25px;
+			padding-right: 25px;
+			font-size: 80%;
+			overflow-x: auto;
+			overflow-y: auto;
+			border: 1px solid #CCCCCC;
+			border-right: 1px solid #999999;
+			border-bottom: 1px solid #999999;
+			background-color: #F9FCFF;
+			box-shadow: 3px 3px 8px #999999;
+			white-space: pre;
+			cite {
+				display: block;
+				font-family: sans-serif;
+				color: #333333;
+				margin-bottom: 1em;
+				white-space: normal;
+			}
+		}
+		@media only screen and (max-width: 560px) {
+			code {
+				font-size: 70%;
+			}
+			h1 {
+				font-size: 16px;
+			}
+		}
+		@media only screen and (max-width: 445px) {
+			code {
+				font-size: 60%;
+			}
+			h1 {
+				font-size: 12px;
+			}
+		}
+	}
+}

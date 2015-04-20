@@ -1,0 +1,20 @@
+	
+	<div>
+		<section>
+			<input type="text" ng-model="keyword" placeholder="Search files...">
+			<h4 ng-show="keyword && filteredFiles.length">
+				{{ filteredFiles.length }} matching file<span ng-show="filteredFiles.length > 1">s</span>:
+			</h4>
+			<cite ng-hide="filteredFiles.length">
+				Sorry, there were no results were found for <strong>{{ keyword }}</strong>.
+			</cite>
+			<ul>
+				<li ng-repeat="file in filteredFiles = (files | filter: keyword) | orderBy: '_id'" ng-click="openFile(file._id, file.icon, file.desc)" ng-show="isFile(file.icon)">
+					<div><img ng-src="/pix/{{ file.icon }}.svg"></div>
+					<code>{{ file._id }}</code>
+					<dd>{{ file.desc }}</dd>
+				</li>
+			</ul>
+		</section>
+	</div>
+	

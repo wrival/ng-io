@@ -1,0 +1,417 @@
+	
+	<h1>Node</h1>
+	<cite>The highly efficient and practical real-time web server.</cite>
+	
+	
+	<fruits-chart></fruits-chart>
+	
+
+	<h2>True Real-time Web Applications</h2>
+	<p>
+		Finally we have a server that can truly tie together real-time 
+		sockets (listeners as functions) making Web-based apps truly work as 
+		if it were a program running on a single machine.
+	</p>
+
+	<h2>Server-side JavaScript</h2>
+	<p>
+		Another very interesting feature that Node presented to us was that 
+		it uses JavaScript. This is the first time where we can write 
+		a Web app entirely in one language from the front-end to the back. This 
+		means that new software engineers only have to learn one language 
+		and makes them more flexible with how they can be used in the 
+		workplace. They can now work on the front-end, back-end, or both as 
+		needed.
+	</p>
+	<p>
+		Also, because JavaScript runs asynchronously, we can easily 
+		fork processes such as checking for a file's last-modified time (to 
+		update the cache for example) without slowing down any current requests. 
+		This makes for a very lean and low-overhead server.
+	</p>
+
+	<h2>Node with Web Sockets</h2>
+	<p>
+		When making a request to Node a very light-weight connection is 
+		established and is left open while a client is connected. This 
+		means that the server can track who's currently connected and 
+		can immediately respond to any 	real-time requests that your 
+		app's logic might need. This is what warrants us to rethink how 
+		our apps interact with its users.
+	</p>
+
+	<h2>Node Modules</h2>
+	<p>
+		Node also has many reusable modules for making common tasks easier 
+		to deploy such as: <em>socket.io</em> for using sockets; <em>mongoose</em> 
+		is an interface for using MongoDB; <em>nodemailer</em> is for setting up an smtp 
+		service for sending email; <em>grunt</em> is a task runner, which also has 
+		many of its own plugins. And there are many more!
+	</p>
+	
+	<h2>Install Node</h2>
+	<p>
+		&#8680; Learn more about Node at: <a href="https://nodejs.org" target="_blank">nodejs.org</a>
+	</p>
+	
+	<h2>The Server</h2>
+
+
+<h3>server.js</h3>
+<h5>(/server.js)</h5>
+<code>
+<h5>// This is what Node runs. From your project folder run:</h5>
+<h5>// node server.js</h5>
+<h5>// This site's entire MAIN Stack example requires these Node modules, </h5>
+<h5>// which can be installed in your project folder with the following commands:</h5>
+<h5>// npm install mongoose</h5>
+<h5>// npm install socket.io</h5>
+
+var fs = require('fs');
+
+<h5>// Load mongoose.</h5>
+require("./server/mongo/mongoose");
+
+<h5>// How to respond to http requests.</h5>
+var router = require('./server/router-http');
+server = require('http').createServer(function(request, response) {
+	router(request, response);
+});
+
+<h5>// Configure server environment.</h5>
+require("./server/env.js");
+
+<h5>// How to respond to web socket requests.</h5>
+io = require('socket.io')(server);
+require("./server/router-ws")(io);
+
+<h5>// Start web server.</h5>
+server.listen(8001, '127.0.0.1');
+</code>
+
+
+<h3>env.js</h3>
+<h5>(/server/env.js)</h5>
+<code>
+<h5>// This file is loaded in the /server.js file.</h5>
+
+var fs = require('fs');
+
+<h5>// Add cache objects (empty placeholders) and security policies to the server.</h5>
+<h5>//</h5>
+<h5>// sessions:		sessions[sessionId] = userId (so can reference id and require a login)</h5>
+<h5>//				(sessionId is generated after a successful login.)</h5>
+<h5>// sockets:		sockets[socket.id] = sessionId (so can delete sessions on disconnect)</h5>
+<h5>//				This means that you can get a userId by using their socketId</h5>
+<h5>//				e.g. sessions[sockets[socket.id]] = userId</h5>
+<h5>// auths:			{ page1: true, page2: true, 'contacts:get': true }</h5>
+<h5>// 				are view requests and/or queries that require being logged in</h5>
+<h5>// filecache:		files are read off of disk and put into this object</h5>
+<h5>// filemod:		file's modified time (reloads cache if different)</h5>
+<h5>// viewcache:	where the cache per view is stored (can have params making it unique)</h5>
+<h5>// nocache:		{ page1: true, page2: true }</h5>
+<h5>//				pages set to true won't be saved in cache</h5>
+<h5>//				(in case want to do server-side dynamic pages)</h5>
+<h5>// queries:		placeholder for all the functions in the queries folder</h5>
+<h5>// query:			reusable cache from a queries (e.g. countries select options)</h5>
+
+server.ENV = {
+	sessions: {},
+	sockets: {},
+	auths: {},
+	filecache: {},
+	filemod: {},
+	viewcache: {},
+	nocache: {},
+	queries: {},
+	query: {}
+};
+server.ENV.checkModTime = function(load, page, ascii) {
+	<h5>// Check if a newer file on disk and update cache.</h5>
+	fs.stat(load, function(err, stats) {
+		if(stats) {
+			if(server.ENV.filemod[page] !== stats.mtime.toString()) {
+				server.ENV.filemod[page] = stats.mtime.toString();
+				if(ascii) {
+					fs.readFile(load, 'utf8', function(errors, content) {
+						if(stats) {
+							//console.log("UPDATING FILE CACHE: " + page);
+							server.ENV.filecache[page] = content;
+						}
+					});
+				} else {
+					fs.readFile(load, function(errors, content) {
+						if(stats) {
+							//console.log("UPDATING FILE CACHE: " + page);
+							server.ENV.filecache[page] = content;
+						}
+					});
+				}
+			}
+		}
+	});
+};
+server.ENV.rememberModTime = function(load, page) {
+	<h5>// Remember mod-time for cache too.</h5>
+	fs.stat(load, function(err, stats) {
+		if(stats) {
+			server.ENV.filemod[page] = stats.mtime;
+		}
+	});
+};
+
+<h5>// Load policies.</h5>
+if(fs.existsSync("./server/policies/auths.json")) {
+	var content = fs.readFileSync("./server/policies/auths.json");
+	server.ENV.auths = JSON.parse(content);
+}
+if(fs.existsSync("./server/policies/nocache.json")) {
+	var content = fs.readFileSync("./server/policies/nocache.json");
+	server.ENV.nocache = JSON.parse(content);
+}
+
+<h5>// Preload functions for the query listener in router-ws.js.</h5>
+var files = fs.readdirSync("./server/mongo/queries");
+for(var i in files) {
+	if(files[i].match(/\.js$/)) {
+		require('./../server/mongo/queries/' + files[i]);
+	}
+}
+</code>
+
+
+<h3>router-http.js</h3>
+<h5>(/server/router-http.js)</h5>
+<code>
+<h5>// This file is loaded in the /server.js file.</h5>
+
+<h5>// Configure how the server responds to http requests.</h5>
+<h5>// There is no need to explicitly declare request routes.</h5>
+<h5>// This router configuration will do everything for you automatically.</h5>
+
+var fs = require('fs');
+
+<h5>// Configure our http header's mime types.</h5>
+var mimeTypes = {
+	html:	"text/html",
+	json:	"text/json",
+	js:	"text/javascript",
+	css:	"text/css",
+	svg:	"image/svg+xml",
+	tsv:	"text/tab-separated-values",
+	cvs:	"text/csv",
+	gif:	"image/gif",
+	png:	"image/png",
+	jpg:	"image/pjpeg",
+	jpeg:	"image/jpeg",
+	ico:	"image/x-icon",
+	zip:	"application/zip"
+};
+var ascii = {
+	html: true,
+	json: true,
+	js: true,
+	css: true,
+	svg: true,
+	tsv: true,
+	cvs: true
+};
+
+module.exports = function(request, response) {
+	
+	var page = request.url; <h5>// /</h5>
+	var load = "www" + page; <h5>// www/</h5>
+	
+	if(page.match(/\/$/)) {
+		<h5>// If just a folder.</h5>
+		page += 'index.html';
+		load += 'index.html';
+	}
+	
+	<h5>// Get request file type.</h5>
+	if(page.match(/\..+$/)) {
+	 	var type = page.match(/\..+$/); <h5>// .JPG</h5>
+		var split = type.toString().split("\."); <h5>// JPG</h5>
+	 	type = split[split.length - 1].toLowerCase(); <h5>// jpg</h5>
+	}
+	
+
+	<h5>// Write the http header.</h5>
+	var contentType;
+	if(mimeTypes[type]) {
+		contentType = { "Content-type": mimeTypes[type] };
+	} else {
+		contentType = { "Content-type": "text/plain" };
+	}
+	response.writeHead(200, contentType);
+	
+	
+	if(server.ENV.filecache[page]) {
+
+		<h5>// Send out what's in cache immediately (for speed).</h5>
+		response.end(server.ENV.filecache[page]);
+		
+		<h5>// Now check if a newer file on disk and update if necessary.</h5>
+		server.ENV.checkModTime(load, page, ascii[type]);
+		
+	} else if(fs.existsSync(load)) {
+
+		<h5>// Wasn't in cache and it exists on disk so read it now.</h5>
+		if(ascii[type]) {
+			<h5>// Wasn't in cache and it exists on disk so read it now.</h5>
+			fs.readFile(load, 'utf8', function(errors, content) {
+				<h5>//console.log("READING FILE: " + load);</h5>
+				server.ENV.filecache[page] = content;
+				response.end(content);
+				
+				<h5>// Remember mod-time for cache too.</h5>
+				server.ENV.rememberModTime(load, page);
+				
+			});
+		} else {
+			fs.readFile(load, function(errors, content) {
+				<h5>//console.log("READING BINARY FILE: " + load);</h5>
+				server.ENV.filecache[page] = content;
+				response.end(content);
+				<h5>// Remember mod-time for cache too.</h5>
+				server.ENV.rememberModTime(load, page);
+			});
+		}
+		
+	} else {
+		<h5>// Didn't exist so do nothing, just end request.</h5>
+		response.end("");
+		return;
+	}
+};
+</code>
+
+
+<h3>router-ws.js</h3>
+<h5>(/server/router-ws.js)</h5>
+<code>
+<h5>// This file is loaded in the /server.js file.</h5>
+
+<h5>// The ws (socket) request server (not to be confused with the router-http).</h5>
+<h5>// Socket Listeners:</h5>
+<h5>// 1. On 'connection', adds the following other listeners for the current socket:</h5>
+<h5>// 2. On 'disconnect', destroys the socket and its listeners.</h5>
+<h5>// 3. On 'query', runs the app's logic (preloaded in env.js) in responders folder.</h5>
+<h5>// 4. On 'request', just like a get-http request, but content is sent thru sockets.</h5>
+
+var fs = require('fs');
+
+module.exports = function(io) {
+	
+	io.on('connection', function(socket) {
+		
+		
+		socket.on('disconnect', function() {
+			<h5>// Clear all their memory when exiting.</h5>
+			delete server.ENV.sessions[server.ENV.sockets[socket.id]];
+			delete server.ENV.sockets[socket.id];
+			socket = undefined;
+		});
+		socket.on('query', function(query) {
+			<h5>// If view doesn't require a login -or- it requires authentication AND if logged in.</h5>
+			if(!server.ENV.auths[query.label] || server.ENV.sessions[query.session]) {
+				<h5>// Perform its function if it's defined.</h5>
+				if(typeof server.ENV.queries[query.label] === 'function') {
+					server.ENV.queries[query.label](socket, query);
+				}
+			}
+		});
+		socket.on('request', function(request) {
+			<h5>// Socket Content Loader (like the http router)</h5>
+			<h5>// (for loading views and directives, reusable security and cache code)</h5>
+			
+			<h5>// request.view can be "profile?id", and request.session is there too</h5>
+			var type = request.type; <h5>// directive, sample, or undefined: view</h5>
+			var view = request.view;
+			var target = request.target; <h5>// The return target to populate (like a callback)</h5>
+			
+			if(view.match(/\.\./) || view.match(/\.\//)) {
+				return; <h5>// Prevent hacks to files outside of project folder.</h5>
+			}
+			while(view.match(/^\//)) {
+				view = view.replace("/", "");
+			}
+
+			<h5>// you may add a query string (like a get) to make the request dynamic and unique</h5>
+			var param = {};
+			var params = {};
+			if(view.match(/\?/)) {
+				view = view.split("?");
+				params = view[1];
+				view = view[0];
+				if(params.match(/&/)) {
+					params = params.split("&");
+					for(var i in params) {
+						var pair = params[i].split("=");
+						param[params[i]] = pair[0]; <h5>// name</h5>
+						param[pair[0]] = pair[1]; <h5>// value</h5>
+					}
+				} else {
+					param = params;
+				}
+			}
+			
+			var file = "";
+			var path = "";
+			switch(type) {
+				case 'directive': file = "./www/directives/" + view + ".html"; break;
+				case 'sample': file = "./" + view; break; // Code sample of site's files.
+				default: file = "./www/views/" + view + ".html";
+			}
+
+			<h5>// If view doesn't require a login -or- it requires authentication AND if logged in.</h5>
+			if(!server.ENV.auths[view] || server.ENV.sessions[request.session]) {
+				if(server.ENV.viewcache[request.view]) {
+					<h5>//console.log("SENDING SERVER-SIDE CACHE: " + view);</h5>
+					socket.emit(target, server.ENV.viewcache[view]);
+					
+					<h5>// Now check if a newer file on disk and update if necessary.</h5>
+					server.ENV.checkModTime(request.view + view + ".html", view);
+					
+				} else {
+					if(server.ENV.filecache[file]) {
+						<h5>//console.log("VIEW USING FILE CACHE: " + file);</h5>
+						<h5>// Only first user reads the actual file.</h5>
+						var data = {
+							view: view,
+							content: server.ENV.filecache[file],
+							params: param
+						};
+						if(!server.ENV.nocache[view]) {
+							server.ENV.viewcache[view] = data;
+						}
+						socket.emit(target, data);
+						
+						<h5>// Now check if a newer file on disk and update if necessary.</h5>
+						server.ENV.checkModTime(file, view);
+						
+					} else {
+						<h5>//console.log("READING VIEW FILE: " + file);</h5>
+						fs.readFile(file, 'utf8', function(errors, content) {
+							var data = {
+								view: view,
+								content: content,
+								params: param
+							};
+							if(!server.ENV.nocache[view]) {
+								server.ENV.viewcache[view] = data;
+							}
+							socket.emit(target, data);
+							
+							<h5>// Remember mod-time for cache too.</h5>
+							server.ENV.rememberModTime(file, view);
+							
+						});
+					}
+				}
+			}
+			<h5>// else: do nothing.</h5>
+		});
+	});
+};
+</code>

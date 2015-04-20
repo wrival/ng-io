@@ -1,0 +1,126 @@
+<script>
+
+	var margin = { top: 15, right: 10, bottom: 10, left: 42 },
+		width = 350,
+		height = 290;
+
+	var x = d3.scale.ordinal()
+		.rangeRoundBands([0, width], 0.1);
+
+	var y = d3.scale.linear()
+		.range([height, 0]);
+
+	var color = d3.scale.ordinal()
+		.range(["HotPink", "LawnGreen", "Yellow", "DarkOrange", "MediumVioletRed"]);
+
+	var xAxis = d3.svg.axis()
+		.scale(x)
+		.orient("bottom");
+
+	var yAxis = d3.svg.axis()
+		.scale(y)
+		.orient("left")
+		.tickFormat(d3.format("d"))
+		.tickSubdivide(0);
+
+	var svg = d3.select("fruits-chart")
+		.insert("svg")
+		.attr("baseProfile", "full")
+		.attr("viewBox", "0 0 400 350")
+		.append("g")
+		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+		var data = [
+			{
+			 	Fruits: "Guava",
+			 	Votes: 0
+			 },
+			{
+			 	Fruits: "Kiwi",
+			 	Votes: 0
+			 },
+			{
+			 	Fruits: "Mango",
+			 	Votes: 0
+			 },
+			{
+			 	Fruits: "Papaya",
+			 	Votes: 0
+			 },
+			{
+			 	Fruits: "Pitaya",
+			 	Votes: 0
+			 }
+		];
+
+		x.domain(data.map(function(d) { return d.Fruits; }));
+		svg.append("g")
+			.attr("class", "x axis")
+			.attr("transform", "translate(0, " + height + ")")
+			.call(xAxis);
+
+		svg.append("text")
+			.attr("x", 157)
+			.attr("y", 327)
+			.attr("fill", "#666666")
+			.attr("font-style", "italic")
+			.attr("font-size", "0.9em")
+			.style("text-anchor", "middle")
+			.text("Users selecting their favorite fruits in real-time!");
+
+		update(data);
+
+function update(data) {
+		
+		// y axis.
+		y.domain([0, d3.max(data, function(d) { return +d.Votes; })]);
+		svg.select(".y.axis").remove();
+		svg.append("g")
+			.attr("class", "y axis")
+			.call(yAxis);
+
+		// x axis.
+		var bar = svg.selectAll(".bar")
+			.data(data, function(d) { return d.Fruits; });
+
+		// New data.
+		bar.enter().append("rect")
+			.attr("class", "bar")
+			.attr("x", function(d) { return x(d.Fruits); })
+			.attr("y", function(d) { return y(d.Votes); })
+			.attr("height", function(d) { return height - y(d.Votes); })
+			.attr("width", x.rangeBand())
+			.style("fill", function(d) { return color(d.Fruits); });
+			
+		// var bartext = svg.selectAll(".bartext")
+		// 	.data(data, function(d) { return d.Votes; });
+		// bartext.enter().append("text")
+		// 	.attr("class", "bartext")
+		// 	.attr("x", function(d) { return x(d.Fruits); })
+		// 	.attr("y", function(d) { return y(d.Votes); })
+		// 	.attr("fill", "white")
+		// 	.attr("font-family", "sans-serif")
+		// 	.attr("font-size", "0.9em")
+		// 	.text(function(d) { return d.Votes; });
+
+
+
+// Removed data
+bar.exit().remove();
+// Updating.
+bar.transition()
+	.duration(750)
+	.attr("y", function(d) { return y(d.Votes); })
+	.attr("height", function(d) { return height - y(d.Votes); });
+
+
+}
+
+</script>
+
+<div ng-show="votesCount < 20">
+	<button ng-click="selectFruit(0)">Guava</button><button ng-click="selectFruit(1)">Kiwi</button><button ng-click="selectFruit(2)">Mango</button><button ng-click="selectFruit(3)">Papaya</button><button ng-click="selectFruit(4)">Pitaya</button>
+</div>
+<div ng-hide="votesCount < 20">
+	You've maxed out your votes!
+</div>

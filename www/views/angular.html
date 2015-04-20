@@ -1,0 +1,300 @@
+	
+	<h1>Angular</h1>
+	<cite>Automatic data binding and custom directives.</cite>
+
+	<h2>The App</h2>
+	<p>
+		The app.js file serves as the top-level parent of the app on the 
+		client-side. It serves 2 primary purposes: 1.) Setup placeholders 
+		for all the data the app needs as it's being used including cache 
+		and session info; 2.) Provides resusable view-loading mechanisms 
+		that links and buttons can use throughout the app.
+	</p>
+
+
+<h3>app.js</h3>
+<h5>(/source/angular/app.js)</h5>
+<code>
+<h5>// Create the app on the client-side.</h5>
+
+var socket = io.connect();
+app = angular.module('app', []);
+
+<h5>// The nocache is hackable on client-side only.</h5>
+<h5>// The server will not provide any new protected info if not logged in.</h5>
+<h5>// Caching prevents unneeded socket requests.</h5>
+<h5>// Using cache also means that any static view that have already been loaded </h5>
+<h5>// will continue to display even if the node server is no longer running!</h5>
+<h5>// SO BEWARE THAT AS CONTENT IS CHANGED EVEN A HARD-RELOAD ON THE BROWSER ISN'T </h5>
+<h5>// ENOUGH! THE NODE SERVER MUST RESTART TO CLEAR THE CACHE.</h5>
+<h5>// To use nocache set it like this: ..nocache.views: { 'page': true, 'another': true }</h5>
+
+app.ENV = {
+	session: "",
+	cache: {
+		views: {},
+		queries: {},
+		directives: {},
+		samples: {}
+	},
+	nocache: {
+		views: {},
+		queries: {},
+		directives: {},
+		samples: {}
+	},
+	lastload: {
+		view: {},
+		params: {},
+		query: {},
+		directive: {},
+		sample: {}
+	}
+};
+
+app.controller('Global', function($scope, $compile, socket) {
+	<h5>// Shared space for init/listeners/triggers for the entire app.</h5>
+	<h5>// (It's always present regardless of what's been loaded, etc.)</h5>
+	
+	$scope.query = function(label, data, callback) {
+		<h5>// 1. delete (reset for current socket, if needed, prevent dupes)</h5>
+		delete window.socket._callbacks[label];
+		<h5>// 2. create listener for response</h5>
+		socket.on(label, function(data) {
+			<h5>// 4. Exec callback</h5>
+			callback(data);
+			if(!app.ENV.nocache.queries[label]) {
+				app.ENV.cache.queries[label] = data;
+			}
+			app.ENV.lastload.query = label;
+		});
+		<h5>// 3. emit to server</h5>
+		socket.emit('query', { label: label, data: data, session: app.ENV.session });
+	};
+	$scope.directive = function(directive, $scope, $compile, socket) {
+		if(!app.ENV.cache.directives[directive]) {
+			<h5>// 1. delete (prevent dupes for directives in nocache)</h5>
+			delete window.socket._callbacks[directive];
+			<h5>// 2. create listener for response</h5>
+			socket.on(directive, function(data) {
+				<h5>// 4. Exec callback</h5>
+				$(directive).html($compile(data.content)($scope));
+				if(!app.ENV.nocache.directives[directive]) {
+					app.ENV.cache.directives[directive] = data.content;
+				}
+				app.ENV.lastload.directive = directive;
+			});
+			<h5>// 3. emit to server</h5>
+			var request = {
+				type: 'directive',
+				view: directive,
+				session: app.ENV.session,
+				target: directive
+			};
+			socket.emit('request', request);
+		}
+	};
+	$scope.sample = function(sample, callback) {
+		if(!sample) { return; }
+		if(app.ENV.cache.samples[sample]) {
+			<h5>//console.log("Using client cache.");</h5>
+			$scope.code = app.ENV.cache.samples[sample];
+			app.ENV.lastload.sample = sample;
+		} else {
+			<h5>// 1. delete (prevent dupes for directives in nocache)</h5>
+			delete window.socket._callbacks[sample];
+			<h5>// 2. create listener for response</h5>
+			socket.on(sample, function(data) {
+				<h5>// 4. Exec callback</h5>
+				callback(data.content);
+				if(!app.ENV.nocache.samples[sample]) {
+					app.ENV.cache.samples[sample] = data.content;
+				}
+				app.ENV.lastload.sample = sample;
+			});
+			<h5>// 3. emit to server</h5>
+			var request = {
+				type: 'sample',
+				view: sample,
+				session: app.ENV.session,
+				target: sample
+			};
+			console.log(request.view);
+			socket.emit('request', request);
+		}
+	};
+	$scope.renderMain = function(content) {
+		<h5>// Renders view content (easily add animation or other logic here).</h5>
+		$('main').html($compile(content)($scope));
+		$('html,body').animate({ scrollTop: 0 }, 'fast');
+	};
+	$scope.load = function(view) {
+		<h5>// Triggers for the app's links.</h5>
+		if(app.ENV.cache.views[view]) {
+			<h5>//console.log("Using client cache.");</h5>
+			$scope.renderMain(app.ENV.cache.views[view]);
+		} else {
+			var request = {
+				view: view,
+				session: app.ENV.session,
+				target: 'Main'
+			};
+			<h5>//console.log("Requesting: " + request.view + " SESSION: " + app.ENV.session);</h5>
+			socket.emit('request', request);
+		}
+	};
+	$scope.modal = false;
+	
+	
+	<h5>// Listen for new content from server.</h5>
+	socket.on('Main', function(data) {
+		app.ENV.lastload.view = data.view;
+		app.ENV.lastload.params = data.params;
+		if(!app.ENV.nocache.views[data.view]) {
+			app.ENV.cache.views[data.view] = data.content;
+		}
+		$scope.renderMain(data.content);
+	});
+	
+	
+	<h5>// Init: load main (home) page.</h5>
+	$scope.load('main');
+});
+ </code>
+	
+	
+	<h2>Socket Factory</h2>
+	<p>
+		Include this socket factory with your app and all of your socket.io 
+		listeners will automatically have Angular's scope tied to them.
+	</p>
+
+
+<h3>sockets.js</h3>
+<h5>(/source/angular/factories/sockets.js)</h5>
+<code>
+<h5>// Makes all socket listeners automatically update angular when ran.</h5>
+
+app.factory('socket', function($rootScope) {
+	return {
+		on: function(eventName, callback) {
+			socket.on(eventName, function() {
+				var args = arguments;
+				$rootScope.$apply(function() {
+					callback.apply(socket, args);
+				});
+			});
+		},
+		emit: function(eventName, data, callback) {
+			socket.emit(eventName, data, function() {
+				var args = arguments;
+				$rootScope.$apply(function() {
+					if(callback) callback.apply(socket, args);
+				});
+			});
+		}
+	};
+});
+</code>
+	
+	
+	<h2>Custom Directives</h2>
+	<p>
+		Make your own tags and/or attributes that contain your application components, 
+		which also provides a covenient means of setting a scope for the application 
+		logic as well as the styles for it. In this case, we are building a &lt;file-browser> 
+		tag that is embedded inside of the views/main.html file, which is the content of the 
+		home page.
+	</p>
+	
+	
+<h3>file-browser.html</h3>
+<h5>(/www/directives/file-browser.html)</h5>
+<code ng-non-bindable>
+&lt;div>
+	&lt;section>
+		&lt;input type="text" ng-model="keyword" placeholder="Search files...">
+		&lt;h4 ng-show="keyword && filteredFiles.length">
+			{{ filteredFiles.length }} matching file&lt;span ng-show="filteredFiles.length > 1">s&lt;/span>:
+		&lt;/h4>
+		&lt;cite ng-hide="filteredFiles.length">
+			Sorry, there were no results were found for &lt;strong>{{ keyword }}&lt;/strong>.
+		&lt;/cite>
+		&lt;ul>
+			&lt;li ng-repeat="file in filteredFiles = (files | filter: keyword) | orderBy: '_id'" ng-click="openFile(file._id, file.icon, file.desc)" ng-show="isFile(file.icon)">
+				&lt;div>&lt;img ng-src="/pix/{{ file.icon }}.svg">&lt;/div>
+				&lt;code>{{ file._id }}&lt;/code>
+				&lt;dd>{{ file.desc }}&lt;/dd>
+			&lt;/li>
+		&lt;/ul>
+	&lt;/section>
+&lt;/div>
+</code>
+	
+	
+<h3>file-browser.js</h3>
+<h5>(/source/directives/file-browser.js)</h5>
+<code>
+<h5>// Directive template for use with sockets.</h5>
+
+<h5>// When &lt;file-browser>&lt;/file-browser> is reached, this object is returned.</h5>
+<h5>// The directive (custom tag) is initially empty.</h5>
+<h5>// Angular sets up and runs the controller for the directive.</h5>
+<h5>// Then the app.ENV.directive function inside the controller automatically does this:</h5>
+<h5>// 1. Creates a socket listener for itself.</h5>
+<h5>// 2. Emits a request for the current directive.</h5>
+<h5>// 3. The listener populates the directive when it gets its content and triggers the compile.</h5>
+
+app.directive('fileBrowser', function() {
+	<h5>// Angular parses "file-browser" and loads camel case diretive: "fileBrowser"</h5>
+	<h5>// &lt;file-browser>&lt;/file-browser></h5>
+	return {
+		restrict: 'E', <h5>// An Element</h5>
+		template: function() {
+			var directive = 'file-browser';
+			if(app.ENV.cache.directives[directive]) {
+				return app.ENV.cache.directives[directive];
+			}
+		},
+		controller: function($scope, $compile, socket) {
+<h5>// DIRECTIVE'S LOGIC.....................</h5>
+			
+			
+			$scope.keyword = "";
+			$scope.file = false;
+			$scope.openFile = function(file, type, desc) {
+				$scope.file = file;
+				$scope.desc = desc;
+				if(type === "folder") {
+					<h5>// Set it as the search and show all files now.</h5>
+					$scope.keyword = file;
+					$('html, body').animate({ scrollTop: $('input').offset().top - 24 });
+				} else {
+					<h5>// Open modal with file.</h5>
+					$scope.code = "";
+					$scope.modal = true;
+					$scope.sample($scope.file, function(html) {
+						$scope.code = html;
+					});
+				}
+			};
+			$scope.isFile = function(type) {
+				if($scope.keyword || type === "folder") return true;
+			};
+			$scope.isOpen = function(file) {
+				return $scope.file === file;
+			};
+			
+			$scope.query('manifest:get', "", function(data) {
+				$scope.files = data;
+			});
+			
+			
+<h5>// .....................DIRECTIVE'S LOGIC.</h5>
+			<h5>// Instead of using template/templateUrl (http/ajax), this uses sockets.</h5>
+			<h5>// Request the file name "file-browser", ".html" is appended to it later.</h5>
+			$scope.directive('file-browser', $scope, $compile, socket); <h5>// reusable from app.js</h5>
+		}
+	};
+});
+</code>

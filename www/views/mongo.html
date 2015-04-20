@@ -1,0 +1,194 @@
+
+	<h1>Mongo</h1>
+	<cite>A modern database for storing data as collections.</cite>
+
+
+	<h2>Collections, Not Tables?</h2>
+	<p>
+		So many of us have learned to structure data into rows and columns  
+		to make tables. Once you have developed this way of thinking it can be a 
+		little challenging to learn a different technique to accomplish the same 
+		thing. However, this new way of storing data is actually a lot more 
+		practical and easier to use once you let yourself accept that it really 
+		is this easy. Hint: It works the same we naturally think as humans.
+	</p>
+	<p>
+		For example, when we think about someone our brains automatically access 
+		a collection of information related to that person directly. We do not 
+		think through every single person we know until we come across the 
+		specific person we're trying to access, slowly, like a table.
+	</p>
+	<p>
+		So what's the secret? Mongo instead uses <em>collections</em>, which is data 
+		stored as objects that can contain values, arrays, and additional objects. 
+		This replaces tables and SQL queries and there's actually quite a few 
+		additional benefits to using collections as well:
+	</p>
+	<ol>
+		<li>
+			Less storage requirements: Since a collection can contain values, arrays, and 
+			objects it makes it really flexible without the strict structure of a table. 
+			The database only needs to store the values you passed to it instead of having 
+			to save every field even if it's empty.
+		</li>
+		<li>
+			Mongo is 100% JSON compatible, which makes what would normally be complex 
+			queries extremely simple and fast.
+		</li>
+		<li>
+			Saving is simple too as Angular fields can easily be setup to be treated 
+			as an object and then simply pass them in as exactly as they are.
+		</li>
+		<li>
+			So not only is the front-end and the back-end now all written in one 
+			langauge so are all of your queries and their output. Smarter, faster, 
+			easier!
+		</li>
+	</ol>
+
+
+	<h2>Install Mongo</h2>
+	<p>
+		You can download and install MongoDB for free or use a third party 
+		hosting service that will scale your databases automatically for you.
+	</p>
+	<p>
+		&#8680; Learn more about MongoDB at: <a href="http://mongodb.org" target="_blank">mongodb.org</a>
+	</p>
+
+	<h2>Mongoose</h2>
+	<p>
+		MongoDB does not discriminate with when telling it to save data and it 
+		will automatically create databases and collections as needed. 
+		Mongoose is the intermediary system that handles the queries for a Mongo 
+		database. It can be configured to require fields before saving data and 
+		defining which collections are available. After you have Node installed 
+		you can go to your project's folder and type the followingcommand to 
+		install mongoose. Then you can setup up schemas for your business logic.
+	</p>
+	<code>npm install mongoose</code>
+	<p>
+		&#8680; Learn more about Mongoose at: <a href="http://mongoosejs.com" target="_blank">mongoosejs.com</a>
+	</p>
+
+
+	<h2>Load Database & Setup Schemas</h2>
+
+
+<h3>mongoose.js</h3>
+<h5>(/server/data/mongoose.js)</h5>
+<code>
+<h5>// This file is loaded in the /server.js file <h6 ng-click="load('node');">(shown on the Node page)</h6></h5>
+
+<h5>// Use the mongoose module.</h5>
+var mongoose = require('mongoose');
+
+<h5>// Connect to a database.</h5>
+var connect = function() {
+	var options = { server: { socketOptions: { keepAlive: 1 } } };
+	mongoose.connect('mongodb://localhost/YourProjectsDB', options); 
+}
+connect();
+mongoose.connection.on('error', function(err) {
+	console.log(err);
+});
+<h5>// If disconnected try reconnecting automatically.</h5>
+mongoose.connection.on('disconnected', function() {
+	connect();
+});
+
+<h5>// Use your schemas.</h5>
+require('./../../server/data/schemas.js');
+</code>
+
+
+<h3>schemas.js</h3>
+<h5>(/server/data/schemas.js)</h5>
+<code>
+<h5>// This file is loaded in the /server/data/mongoose.js file.</h5>
+
+<h5>// Use the mongoose module.</h5>
+var mongoose = require('mongoose');
+
+<h5>// Setup a schema.</h5>
+var ManifestSchema = new mongoose.Schema({
+		_id: String,
+		icon: String,
+		desc: String
+	}, {
+		collection: 'manifest'
+	}
+);
+mongoose.model('Manifest', ManifestSchema);
+</code>
+	
+	
+	<h2>Queries</h2>
+	<p>
+		Save your app's queries in the queries folder. They are all loaded 
+		automatically in the env.js file. Each holds functions that get preloaded 
+		and are ran when a socket is emitted for them.
+	</p>
+	
+<h3>manifest.js</h3>
+<h5>(/server/data/queries/manifest.js)</h5>
+<code>
+<h5>// This file is loaded in the /server/env.js file <h6 ng-click="load('node');">(shown on the Node page)</h6></h5>
+
+var mongoose = require('mongoose');
+var Manifest = mongoose.model('Manifest');
+var label = "";
+
+<h5>// Called from my &lt;file-browser> directive.</h5>
+label = 'manifest:get';
+server.ENV.queries[label] = function(socket, data) {
+	
+	if(server.ENV.query[label]) {
+		<h5>// Use cache.</h5>
+		socket.emit(label, server.ENV.query[label]);
+	} else {
+		
+		Manifest.<u>find</u>(function(err, data) {
+			<h5>// Got from database now sending the data back.</h5>
+			socket.emit(label, data);
+			<h5>// Save in cache.</h5>
+			server.ENV.query[label] = data;
+		});
+		
+		
+		<h5>// More Mongoose query sytax samples:</h5>
+		
+		<h5>// GET 1</h5>
+		<h5>//var query = { _id: data._id };</h5>
+		<h5>//Contact.<u>findOne</u>(query, function(err, data) {</h5>
+			<h5>// data is the entire record in an object</h5>
+			<h5>// e.g. data.first_name, data.last_name</h5>
+			<h5>//socket.emit('Send Contact', data); // pass data to Angular</h5>
+		<h5>//});</h5>
+		
+		<h5>// GET MULTIPLE</h5>
+		<h5>var query = { last_name: data.last_name };</h5>
+		<h5>Contact.<u>find</u>(query, function(err, data) {</h5>
+			<h5>// data is the entire record in an object</h5>
+			<h5>// e.g. data[0].first_name, data[0].last_name</h5>
+			<h5>//socket.emit('Send Contacts', data); // pass data to Angular</h5>
+		<h5>});</h5>
+		
+		<h5>// SAVE</h5>
+		<h5>var contact = new Contact(data);</h5>
+		<h5>var d = new Date();</h5>
+		<h5>d = d.getTime();</h5>
+		<h5>contact.created = d;</h5>
+		<h5>contact.modified = d;</h5>
+		<h5>contact.<u>save</u>(function(err, data) {</h5>
+			<h5>// data is the saved object, the data._id is now there</h5>
+		<h5>})</h5>
+		
+		<h5>// DELETE</h5>
+		<h5>var query = { last_name: data.last_name };</h5>
+		<h5>contact.<u>remove</u>(query, function() {</h5>
+			<h5>// deleted contacts</h5>
+		<h5>});</h5>
+	}
+};
+</code>

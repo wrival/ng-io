@@ -1,0 +1,41 @@
+{
+	"name": "ng-io",
+	"version": "0.9.0",
+	"description": "The MAIN stack framework. Use Mongo, Angular, IO, and Node seamlessly together.",
+	"keywords": [
+		"mongo",
+		"mongooose",
+		"angular",
+		"directives",
+		"factory",
+		"io",
+		"socket.io",
+		"sockets",
+		"ws",
+		"main",
+		"stack"
+	],
+	"main": "server.js",
+	"dependencies": {
+		"mongoose": "^4.0.1",
+		"socket.io": "^1.3.5"
+	},
+	"devDependencies": {
+		"grunt": "^0.4.5",
+		"grunt-concurrent": "^1.0.0",
+		"grunt-contrib-copy": "^0.8.0",
+		"grunt-contrib-less": "^1.0.0",
+		"grunt-contrib-uglify": "^0.8.0",
+		"grunt-contrib-watch": "^0.6.1",
+		"grunt-nodemon": "^0.4.0"
+	},
+	"scripts": {
+		"test": "echo "Error: no test specified" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git://github.com/wrival/ng-io.git"
+	},
+	"author": "Justin L. Fisher",
+	"license": "ISC"
+}

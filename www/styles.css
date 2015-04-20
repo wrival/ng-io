@@ -1,0 +1,429 @@
+file-browser div section {
+  margin-top: 1.5em;
+  padding-left: 40px;
+  padding-right: 40px;
+}
+file-browser div section cite {
+  display: block;
+  margin-top: 1.5em;
+}
+file-browser input {
+  height: 30px;
+  line-height: 30px;
+  font-size: 20px;
+  margin-bottom: 5px;
+}
+file-browser h4 {
+  margin: 0;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  font-family: sans-serif;
+}
+file-browser ul {
+  padding-left: 0;
+  margin: 0;
+  list-style-type: none;
+}
+file-browser li {
+  margin-bottom: 5px;
+  padding: 10px;
+  padding-left: 0;
+  min-height: 50px;
+  box-shadow: 1px 1px 4px #666666;
+  background-color: #FFFFFF;
+}
+file-browser li div {
+  float: left;
+  width: 50px;
+  height: 50px;
+  margin: 5px;
+  margin-left: 5px;
+  margin-top: 0;
+}
+file-browser dd {
+  margin-left: 60px;
+  padding-left: 0;
+  font-family: sans-serif;
+  font-size: 75%;
+  color: #666666;
+}
+file-browser li:hover {
+  background-color: #FFFF66;
+  cursor: pointer;
+}
+@media only screen and (max-width: 680px) {
+  file-browser div section {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  file-browser input {
+    margin-left: 0;
+  }
+  file-browser li {
+    margin-left: 0;
+    margin-right: 0;
+  }
+  file-browser li code {
+    font-size: 90%;
+  }
+  file-browser dd {
+    font-size: 70%;
+  }
+}
+@media only screen and (max-width: 500px) {
+  file-browser input {
+    width: 100%;
+  }
+  file-browser li {
+    text-align: center;
+  }
+  file-browser li div {
+    display: block;
+    width: 100%;
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+  file-browser li div img {
+    float: none;
+    width: 50px;
+    height: 50px;
+  }
+  file-browser li code {
+    font-size: 80%;
+    font-weight: bold;
+  }
+  file-browser dd {
+    margin-left: 5px;
+    margin-right: 5px;
+    font-size: 65%;
+  }
+}
+
+fruits-chart {
+  float: right;
+  margin-top: 5px;
+  margin-right: 0;
+  margin-bottom: 0.75em;
+  margin-left: 1.25em;
+  border: 1px solid orange;
+  max-width: 500px;
+  box-shadow: 3px 3px 8px #999999;
+  width: 50%;
+  height: auto;
+}
+fruits-chart .axis {
+  font: 10px sans-serif;
+}
+fruits-chart .axis path,
+fruits-chart .axis line {
+  fill: none;
+}
+fruits-chart .x.axis path {
+  display: none;
+}
+fruits-chart div {
+  height: 36px;
+  line-height: 36px;
+  text-align: center;
+  font-family: sans-serif;
+}
+fruits-chart div button {
+  width: 18%;
+  height: 30px;
+  margin: 1%;
+}
+@media only screen and (max-width: 620px) {
+  fruits-chart {
+    float: none;
+    display: block;
+    width: 100%;
+    margin-left: 0;
+  }
+  fruits-chart > button {
+    font-size: 40%;
+  }
+}
+@media only screen and (max-width: 800px) {
+  fruits-chart > button {
+    font-size: 50%;
+  }
+}
+
+html,
+body {
+  font-size: 18px;
+  font-family: sans-serif;
+  min-width: 260px;
+}
+header {
+  display: block;
+  width: 100%;
+  text-align: center;
+}
+header img {
+  width: 100%;
+  max-width: 333px;
+  height: auto;
+  cursor: pointer;
+}
+header nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  outline: 1px solid #666666;
+  background-color: #F0F0F0;
+  height: 40px;
+}
+header nav ul li {
+  display: inline-block;
+  text-align: center;
+  width: 25%;
+  padding: 0;
+  line-height: 40px;
+  cursor: pointer;
+  float: left;
+}
+header nav ul li:hover {
+  background-color: #CCCCFF;
+}
+main {
+  display: block;
+  min-height: 500px;
+  margin-left: 8%;
+  margin-right: 8%;
+  font-family: serif;
+}
+main > h1 {
+  text-align: center;
+  font-size: 240%;
+  margin-bottom: 0;
+}
+main > cite {
+  text-align: center;
+  display: block;
+  width: 100%;
+  margin-bottom: 2em;
+}
+main h2 {
+  color: #3333CC;
+  margin-top: 1.5em;
+}
+main p {
+  text-align: justify;
+}
+main ol li {
+  margin-top: 0.75em;
+}
+main ol li:child-first {
+  margin-top: 0;
+}
+main h3 {
+  margin-bottom: 0;
+}
+main h5 {
+  margin-top: 0;
+  margin-bottom: 0;
+  font-weight: normal;
+}
+main h5 + code {
+  display: block;
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: 450px;
+  border: 1px solid #CCCCCC;
+  border-right: 1px solid #999999;
+  border-bottom: 1px solid #999999;
+  padding: 1em;
+  padding-top: 0;
+  white-space: pre;
+  font-size: 80%;
+  background-color: #F9FCFF;
+  box-shadow: 3px 3px 8px #999999;
+}
+@media only screen and (max-width: 560px) {
+  main h5 + code {
+    font-size: 70%;
+  }
+}
+@media only screen and (max-width: 445px) {
+  main h5 + code {
+    font-size: 60%;
+  }
+}
+main dl dt {
+  margin-top: 1em;
+  font-family: monospace;
+  color: brown;
+}
+main dl dd {
+  font-style: italic;
+}
+code {
+  font-family: monospace;
+  color: brown;
+}
+code h5 {
+  display: inline;
+  font-family: sans-serif;
+  font-weight: bold;
+  color: black;
+}
+code h6 {
+  display: inline;
+  font-family: sans-serif;
+  font-weight: bold;
+  color: green;
+  cursor: pointer;
+}
+footer {
+  text-align: center;
+  font-size: 75%;
+  margin-top: 3.5em;
+  padding-top: 1.5em;
+  margin-bottom: 2em;
+  color: #666666;
+}
+footer nav div {
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  width: 100%;
+  cursor: pointer;
+}
+footer nav div:hover {
+  background-color: #CCCCFF;
+}
+footer nav ul {
+  border-top: 1px solid #999999;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  padding-bottom: 1em;
+  height: 40px;
+}
+footer nav ul li {
+  display: inline-block;
+  text-align: center;
+  width: 25%;
+  padding: 0;
+  line-height: 40px;
+  cursor: pointer;
+  float: left;
+}
+footer nav ul li:hover {
+  background-color: #CCCCFF;
+}
+
+shared-modal section {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(255, 255, 255, 0.9);
+}
+shared-modal section code,
+shared-modal section div {
+  position: fixed;
+}
+shared-modal section div {
+  top: 15px;
+  right: 23px;
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  color: dimgray;
+  border: 1px solid dimgray;
+  border-weight: bold;
+  line-height: 30px;
+  background-color: white;
+  cursor: pointer;
+}
+shared-modal section div:hover {
+  background-color: yellow;
+  color: black;
+}
+shared-modal section h1 {
+  font-size: 22px;
+  font-family: sans-serif;
+  color: black;
+  margin-top: 0;
+  margin: 0;
+  padding: 0;
+  border-bottom: 1px solid dimgray;
+}
+shared-modal section code {
+  top: 30px;
+  right: 30px;
+  bottom: 30px;
+  left: 30px;
+  padding: 5px;
+  padding-left: 25px;
+  padding-right: 25px;
+  font-size: 80%;
+  overflow-x: auto;
+  overflow-y: auto;
+  border: 1px solid #CCCCCC;
+  border-right: 1px solid #999999;
+  border-bottom: 1px solid #999999;
+  background-color: #F9FCFF;
+  box-shadow: 3px 3px 8px #999999;
+  white-space: pre;
+}
+shared-modal section code cite {
+  display: block;
+  font-family: sans-serif;
+  color: #333333;
+  margin-bottom: 1em;
+  white-space: normal;
+}
+@media only screen and (max-width: 560px) {
+  shared-modal section code {
+    font-size: 70%;
+  }
+  shared-modal section h1 {
+    font-size: 16px;
+  }
+}
+@media only screen and (max-width: 445px) {
+  shared-modal section code {
+    font-size: 60%;
+  }
+  shared-modal section h1 {
+    font-size: 12px;
+  }
+}
+
+ws-chart {
+  float: right;
+  margin-top: 5px;
+  margin-right: 0;
+  margin-bottom: 0.75em;
+  margin-left: 1.25em;
+  border: 1px solid orange;
+  max-width: 400px;
+  box-shadow: 3px 3px 8px #999999;
+  width: 50%;
+  height: auto;
+}
+ws-chart .axis {
+  font: 10px sans-serif;
+}
+ws-chart .axis path,
+ws-chart .axis line {
+  fill: none;
+  stroke: #999999;
+  shape-rendering: crispEdges;
+}
+ws-chart .x.axis path {
+  display: none;
+}
+@media only screen and (max-width: 500px) {
+  ws-chart {
+    float: none;
+    display: block;
+    width: 100%;
+    margin-left: 0;
+  }
+}

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Creator: CorelDRAW X7 -->
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="50px" height="50px" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+viewBox="0 0 50 50"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+ <defs>
+  <style type="text/css">
+   <![CDATA[
+    .str5 {stroke:#606062;stroke-width:0.374977}
+    .str2 {stroke:#84716B;stroke-width:0.499985}
+    .str1 {stroke:#A8518A;stroke-width:0.499985}
+    .str6 {stroke:#727376;stroke-width:0.624993}
+    .str7 {stroke:#F58634;stroke-width:0.624993}
+    .str4 {stroke:#A8518A;stroke-width:0.624993}
+    .str0 {stroke:#96989A;stroke-width:0.0833387}
+    .str3 {stroke:#A8518A;stroke-width:0.624993;stroke-linecap:round;stroke-linejoin:bevel}
+    .fil5 {fill:none}
+    .fil3 {fill:#FEFEFE}
+    .fil6 {fill:#FEFEFE}
+    .fil2 {fill:#E6E7E8}
+    .fil0 {fill:#727376}
+    .fil1 {fill:#FDD1A1}
+    .fil4 {fill:#A8518A}
+    .fil7 {fill:#606062;fill-rule:nonzero}
+    .fil8 {fill:#373435;fill-rule:nonzero}
+   ]]>
+  </style>
+ </defs>
+ <g id="Layer_x0020_1">
+  <metadata id="CorelCorpID_0Corel-Layer"/>
+  <g id="_104598105552">
+   <ellipse class="fil0 str0" cx="-51" cy="47" rx="21" ry="3"/>
+   <polygon class="fil1 str1" points="-69,14 -64,14 -62,11 -55,11 -54,14 -34,14 -34,47 -69,47 "/>
+   <polygon class="fil2 str2" points="-66,16 -33,16 -35,42 -68,42 "/>
+   <polygon class="fil3 str2" points="-63,18 -30,18 -35,45 -68,45 "/>
+   <polygon class="fil4" points="-62,21 -26,21 -33,47 -69,47 "/>
+  </g>
+  <g id="_104598128176">
+   <path class="fil0" d="M67 4c10,1 13,0 23,-1 1,0 4,1 5,3 2,-1 4,0 4,0 2,10 -3,23 -1,35 -11,-1 -15,-2 -29,0 3,-22 1,-27 -2,-37z"/>
+   <path class="fil5 str3" d="M91 1c4,0 10,3 10,5"/>
+   <path class="fil6 str4" d="M70 2c10,1 11,-1 21,-1 1,-1 5,1 6,5 2,-2 4,-1 4,0 3,10 -2,20 0,33 -12,-1 -17,-1 -31,1 4,-22 3,-29 0,-38z"/>
+   <line class="fil5 str5" x1="96" y1="26" x2="77" y2= "26" />
+   <line class="fil5 str5" x1="96" y1="29" x2="81" y2= "29" />
+   <line class="fil5 str5" x1="96" y1="31" x2="76" y2= "31" />
+   <path id="JSON" class="fil7" d="M79 18c0,-1 -1,-1 -1,-1 0,0 0,0 0,-1 0,0 0,0 -1,0 0,0 0,0 -1,0l0 -1c1,0 1,0 1,0 1,0 1,0 1,0 0,0 0,-1 0,-1 0,0 1,0 1,-1l0 -1c0,-1 0,-1 0,-1 0,-1 0,-1 0,-1 1,0 1,0 1,-1 1,0 1,0 2,0l0 1c-1,0 -1,0 -1,0 0,0 0,0 -1,0 0,0 0,1 0,1 0,0 0,0 0,0l0 2c0,0 0,1 0,1 -1,0 -1,1 -1,1 0,0 0,0 -1,0 0,0 0,0 0,0l0 1c0,0 0,0 0,0 1,0 1,0 1,0 0,1 0,1 1,1 0,0 0,1 0,1l0 2c0,0 0,0 0,0 0,1 0,1 0,1 1,0 1,0 1,0 0,0 0,0 1,0l0 1c-1,0 -1,0 -2,0 0,0 0,0 -1,-1 0,0 0,0 0,-1 0,0 0,0 0,-1l0 -1z"/>
+   <path id="1" class="fil7" d="M93 21c0,0 0,0 1,0 0,0 0,0 0,0 0,0 1,0 1,-1 0,0 0,0 0,0l0 -2c0,0 0,-1 0,-1 0,0 0,0 1,-1 0,0 0,0 0,0 1,0 1,0 1,0l0 -1c0,0 0,0 -1,0 0,0 0,0 0,0 -1,0 -1,-1 -1,-1 0,0 0,-1 0,-1l0 -2c0,0 0,0 0,0 0,0 -1,-1 -1,-1 0,0 0,0 0,0 -1,0 -1,0 -1,0l0 -1c1,0 1,0 1,0 1,1 1,1 1,1 1,0 1,0 1,1 0,0 0,0 0,1l0 1c0,1 0,1 0,1 0,0 1,1 1,1 0,0 0,0 0,0 1,0 1,0 1,0l0 1c0,0 0,0 -1,0 0,0 0,0 0,0 0,1 -1,1 -1,1 0,0 0,0 0,1l0 1c0,1 0,1 0,1 0,1 0,1 -1,1 0,1 0,1 -1,1 0,0 0,0 -1,0l0 -1z"/>
+   <path id="2" class="fil7" d="M87 15c0,0 0,0 0,0 0,0 0,0 0,0 0,0 -1,-1 -1,-1 0,0 0,0 0,0 0,0 0,0 0,0 0,0 1,-1 1,-1 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 1,0 0,0 0,0 0,0 0,0 0,1 0,1 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,1 0,1 0,0 0,0 0,0 -1,0 -1,0 -1,0zm0 5c0,0 0,0 0,0 0,0 0,-1 0,-1 0,0 -1,0 -1,0 0,0 0,0 0,0 0,0 0,0 0,-1 0,0 1,0 1,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 1,0 0,0 0,0 0,0 0,0 0,0 0,0 0,1 0,1 0,1 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,1 0,1 -1,0 -1,0 -1,0z"/>
+  </g>
+  <g id="_104598114800">
+   <rect class="fil0 str6" x="17" y="18" width="15" height="15"/>
+   <rect class="fil6 str7" x="18" y="17" width="15" height="15"/>
+   <polygon class="fil8" points="28,27 26,25 23,27 23,29 21,29 21,27 23,27 25,24 23,22 21,22 21,20 23,20 23,21 26,24 28,21 28,20 30,20 30,22 29,22 26,24 29,27 30,27 30,29 28,29 "/>
+  </g>
+ </g>
+</svg>

@@ -1,0 +1,95 @@
+	
+	<h1>IO</h1>
+	<cite>Real-time data between the client and server side.</cite>
+	
+	
+	<ws-chart></ws-chart>
+	
+	
+	<h2>Sockets vs. Ajax</h2>
+	<p>
+		Modern browsers support Web Sockets, the <em>ws</em> protocol. 
+		It's provides the ability to stay connected to a server like Node giving 
+		us the option of feeding data to the client in real-time. Ajax processes use the 
+		<em>http</em> protocol, which has a larger handshake and requires 
+		it to be initialized on every part of the request.
+	</p>
+	<p>
+		With sockets, there's a light-weight connection that stays open the entire 
+		time a user is connected. Data can then be passed back and forth in real-time 
+		using this lower level of TCP, which communicates and sends data more 
+		efficiently than http. As a result, this means that we can simply write functions 
+		on the client-side that can instantly talk to functions on the server-side, 
+		and vice versa, as if the client and server were written as a single program. 
+		The other benefit is that we can now easily write logic that pushes real-time 
+		data to the client as needed. Chat rooms, news feeds, stock quotes, and the 
+		weather are some obvious examples. But how about a server that was built to use 
+		this in its entirety? The MAIN stack can feed any and all content as it changes 
+		to whomever is currently connected rather than waiting for the user to reload a 
+		page!
+	</p>
+	
+	
+	<h2>No More &lt;form> Tag!</h2>
+	<p>
+		Angular automatically assembles our input data into JSON and since we're using 
+		sockets to communicate with the server we no longer need the &lt;form> tag or 
+		a GET/POST to send the data. It's all automatic now. In addition, with Mongo, that 
+		same data can be saved by merely passing a single variable exactly as it is to the 
+		server. There just simply is no need for form parsing anymore! Here's some sample 
+		code to demonstrate this concept. However, please note that this is still not 
+		the best way to do it. The MAIN stack instead automatically builds out the 
+		listeners inside of custom directives. <u>This is for conceptual purposes only:</u>
+	</p>
+	
+
+<h3>Input Data</h3>
+<h5>(Angular Template)</h5>
+<code>
+&lt;fieldset ng-controller="UserForm">
+	&lt;input type="text" ng-model="<strong>data</strong>.first_name">
+	&lt;input type="text" ng-model="<strong>data</strong>.last_name">
+	&lt;button ng-click="<strong>save</strong>()">Save&lt;/button>
+&lt;/fieldset>
+</code>
+
+
+<h3>Send It</h3>
+<h5>(Angular Controller)</h5>
+<code>
+app.controller('UserForm', function($scope, socket) {
+	
+	$scope.<strong>save</strong> = function() {
+		<h5>// 1. ng-click button's trigger, send data (all "data." fields) to server.</h5>
+		socket.emit('Save Data', $scope.<strong>data</strong>);
+	};
+	socket.on('Save Success', function(data) {
+		<h5>// 4. Do this when saved!</h5>
+	});
+	socket.on('Save Failed', function(err) {
+		<h5>// Do this if there was an error.</h5>
+	});
+});
+</code>
+
+
+<h3>Save It</h3>
+<h5>(Server-side)</h5>
+<code>
+var mongoose = require('mongoose');
+var Users = mongoose.model('Users');
+
+<h5>// 2. Listen for data.</h5>
+socket.on('Save Data', function(data) {
+	var user = new Users(data);
+	user.save(function(err, data) {
+		if(data) {
+			<h5>// 3. This 'data' now includes the key.</h5>
+			socket.emit('Save Success', data);
+		} else {
+			<h5>// There was an error: err</h5>
+			socket.emit('Save Failed', err);
+		}
+	});
+});
+</code>

@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+<head>
+	<title>ng-io: Angular + IO</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0">
+	<link rel="icon" type="image/x-icon" href="/favicon.ico">
+	<link rel="stylesheet" type="text/css" href="/styles.css">
+	<script src="/script.js"></script>
+</head>
+<body ng-app="app" ng-controller="Global">
+	
+	
+	<header>
+		<img src="/pix/logo.svg" alt="ng-io.com" ng-click="load('main');">
+		<nav>
+			<ul>
+				<li ng-click="load('mongo');"><u>M</u>ongo</li>
+				<li ng-click="load('angular');"><u>A</u>ngular</li>
+				<li ng-click="load('io');"><u>I</u>O</li>
+				<li ng-click="load('node');"><u>N</u>ode</li>
+			</ul>
+		</nav>
+	</header>
+	
+	
+	<main></main>
+	
+
+	<footer>
+		<nav>
+			<div ng-click="load('main');">Angular + IO</div>
+			<ul>
+				<li ng-click="load('mongo');"><u>M</u>ongo</li>
+				<li ng-click="load('angular');"><u>A</u>ngular</li>
+				<li ng-click="load('io');"><u>I</u>O</li>
+				<li ng-click="load('node');"><u>N</u>ode</li>
+			</ul>
+		</nav>
+		<a href="http://4html.com">Justin L. Fisher</a>
+	</footer>
+
+	
+	<shared-modal></shared-modal>
+</body>
+</html>
